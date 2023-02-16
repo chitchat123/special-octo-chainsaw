@@ -1,31 +1,34 @@
 package main
 
+// cache hold all precomputed and used prime numbers
 var cache = make(map[int]bool)
 
-func cachedIsPrime(n int) (response bool) {
-	if result, ok := cache[n]; ok {
+// cachedIsPrime check for number in cache, if number not exist call isPrime
+func cachedIsPrime(number int) (response bool) {
+	if result, ok := cache[number]; ok {
 		response = result
 	} else {
-		response = isPrime(n)
-		cache[n] = response
+		response = isPrime(number)
+		cache[number] = response
 	}
 
 	return response
 }
 
-func isPrime(n int) bool {
+// isPrime check if number is prime
+func isPrime(number int) bool {
 	switch {
-	case n <= 1:
+	case number <= 1:
 		return false
-	case n <= 3:
+	case number <= 3:
 		return true
-	case n%2 == 0 || n%3 == 0:
+	case number%2 == 0 || number%3 == 0:
 		return false
 	}
 
-	// Check if n is divisible by any number of the form 6k ± 1 up to sqrt(n)
-	for i := 5; i*i <= n; i += 6 {
-		if n%i == 0 || n%(i+2) == 0 {
+	// Check if number is divisible by any number of the form 6k ± 1 up to sqrt(number)
+	for i := 5; i*i <= number; i += 6 {
+		if number%i == 0 || number%(i+2) == 0 {
 			return false
 		}
 	}

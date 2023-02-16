@@ -13,11 +13,13 @@ import (
 	"time"
 )
 
+// Server struct hold all needed dependencies for server and router
 type Server struct {
-	l      *log.Logger
-	Router *gin.Engine
+	l      *log.Logger // l provide unified logger
+	Router *gin.Engine // Router holds all handlers and middlewares
 }
 
+// NewServer create server instance initialize router and inject dependencies to it
 func NewServer(l *log.Logger) *Server {
 	gin.DefaultWriter = l.Writer()
 	gin.SetMode(gin.ReleaseMode)
@@ -38,16 +40,17 @@ func NewServer(l *log.Logger) *Server {
 	return &Server{l, router}
 }
 
-func (s *Server) Start() { // create a new server
+// Start server and wait for interrupts for polite stopping
+func (s *Server) Start() {
 	srv := http.Server{
-		Addr:         ":8080",                              // configure the bind address
-		Handler:      s.Router,                             // set the default handler
-		ErrorLog:     log.New(s.l.Writer(), "[server]", 0), // set the logger for the server
-		ReadTimeout:  5 * time.Second,                      // max time to read request from the client
-		WriteTimeout: 10 * time.Second,                     // max time to write response to the client
-		IdleTimeout:  120 * time.Second,                    // max time for connections using TCP Keep-Alive
+		Addr:         ":8080",                               // configure the bind address
+		Handler:      s.Router,                              // set the default handler
+		ErrorLog:     log.New(s.l.Writer(), "[server] ", 0), // set the logger for the server
+		ReadTimeout:  5 * time.Second,                       // max time to read request from the client
+		WriteTimeout: 10 * time.Second,                      // max time to write response to the client
+		IdleTimeout:  120 * time.Second,                     // max time for connections using TCP Keep-Alive
 	}
-	// start the server
+	// start the server in goroutine
 	go func() {
 		s.l.Println("Starting server on port 8080")
 

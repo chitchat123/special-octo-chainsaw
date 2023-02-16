@@ -15,7 +15,7 @@ import (
 func Test_primeHandler(t *testing.T) {
 	tests := []struct {
 		name       string
-		req        []interface{}
+		req        any
 		want       []bool
 		wantError  string
 		wantStatus int
@@ -25,6 +25,9 @@ func Test_primeHandler(t *testing.T) {
 		{"3", []any{1, 2, "a"}, nil, "the given input is invalid. Element on index 2 is not a number", http.StatusBadRequest},
 		{"4", []any{1, 2.11}, nil, "the given input is invalid. Element on index 1 is not a number", http.StatusBadRequest},
 		{"5", []any{1, 2, []int{1, 2}}, nil, "the given input is invalid. Element on index 2 is not a number", http.StatusBadRequest},
+		{"5", struct {
+			name string
+		}{"test"}, nil, "could not parse body: json: cannot unmarshal object into Go value of type []interface {}", http.StatusBadRequest},
 	}
 	// Create a new router instance
 	r := gin.New()

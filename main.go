@@ -9,14 +9,11 @@ import (
 )
 
 func main() {
-	start := time.Now()
-
-	logger := log.New(log.Writer(), "[PRIMES] ", 0)
-	srv := server.NewServer(logger)
-
-	srv.Router.Use(func(c *gin.Context) {
-		logger.Println(c.Errors.Errors())
-	})
+	var (
+		start  = time.Now()
+		logger = log.New(log.Writer(), "[PRIMES] ", log.LstdFlags)
+		srv    = server.NewServer(logger)
+	)
 
 	srv.Router.POST("", primeHandler(logger))
 
@@ -25,5 +22,6 @@ func main() {
 	})
 
 	logger.Printf("Started, %fs", time.Since(start).Seconds())
+
 	srv.Start()
 }
