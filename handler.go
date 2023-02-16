@@ -32,7 +32,7 @@ func primeHandler(l *log.Logger) func(c *gin.Context) {
 			response[i] = cachedIsPrime(num)
 		}
 
-		c.JSON(http.StatusOK, gin.H{"nums": response})
+		c.JSON(http.StatusOK, response)
 	}
 }
 
@@ -42,7 +42,6 @@ func toInt(nums []interface{}) (res []int, err error) {
 		switch v := num.(type) {
 		case int:
 			res[i] = v
-
 		case float64:
 			if float64(int(v)) != v {
 				return nil, fmt.Errorf("%d", i)
